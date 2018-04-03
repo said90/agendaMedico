@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./plantilla.xhtml">
+
+
+
+            <ui:define name="content">
+                <br/>
+                <p:panel header="Configuración de permisos por tipo de usuario"  style="width: 80%;margin: 0 auto; text-align:center;
+                         padding: 5px; text-align: justify;font-size: 14px">
+                    <h:form id="form" >
+
+                        <p:growl id="mensaje" autoUpdate="false" severity="info, fatal" showSummary="false" showDetail="true"/>
+                        <p:dataTable id="tblMenus" value="#{menuController.lstPermisosMenu}" var="menu"  
+                                     emptyMessage="No hay usuarios registrados en la base de datos"
+                                     paginator="true" rows="10" paginatorPosition="bottom" editable="true" 
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks}
+                                     {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="5,10" reflow="true" resizeMode="expand" rowExpandMode="multiply"  widgetVar="data"> 
+
+
+
+                            <p:column headerText="Nombre del menu">
+                                <p:outputLabel value="#{menu.nombre}"/>
+                            </p:column>
+
+                            <p:column headerText="Tipo de menu">
+                                <p:outputLabel value="#{menu.tipo}"/>
+                            </p:column>
+
+
+
+                            <p:column headerText="Tipo de usuario que tiene acceso">
+
+                                <h:outputText value="#{menu.tipoUsario}" />
+
+                            </p:column>
+
+                            <p:column headerText="Editar" style="width:32px">
+                                <p:commandButton title="Modificar acceso" icon="ui-icon-pencil"
+                                                 oncomplete="PF('dlgModificar').show();"  update=":frmModificar" 
+                                                 >
+                                    <f:setPropertyActionListener target="#{menuController.menu}" value="#{menu}"  />
+                                </p:commandButton>
+                            </p:column>
+
+                        </p:dataTable>
+
+
+                    </h:form>
+
+                    <p:dialog id="dlgModificar" header="Modificar Usuario" showEffect="fade" hideEffect="fade"
+                              widgetVar="dlgModificar" modal="true" draggable="false" resizable="false" minWidth="400"  >
+                        <h:form id="frmModificar">
+
+                            <p:panelGrid columns="2" layout="grid" style="width: 650px;margin: 0 auto" id="pgDatos">
+                                <p:outputLabel  value="Nombre del menu:"/>
+
+                                <p:outputLabel  value="#{menuController.menu.nombre}"/>
+                                <p:outputLabel  value="Tipo de menu:"/>
+                                <p:outputLabel  value="#{menuController.menu.tipo}"/>
+                                <p:outputLabel  value="Tipo de acceso"/>
+
+                                <p:selectOneMenu  effect="fade"
+                                                 style=" width: 150px"                                              
+                                                 value="#{menuController.menu.tipoUsario}" >
+                                    <f:selectItem itemLabel="  --  Seleccione  --" itemValue="#{null}"/>
+                                    <f:selectItem itemLabel="Operario" itemValue="Operario" />
+                                    <f:selectItem itemLabel="Administrador" itemValue="Administrador" />
+                                </p:selectOneMenu>
+                            </p:panelGrid>
+
+                            <p:commandButton  style="margin: 0 auto; text-align: center" actionListener="#{menuController.modificarPermisos()}"  
+
+                                              action="/permisos.xhtml?faces-redirect=true"
+                                              value="Modificar" icon="ui-icon-check" >
+
+                            </p:commandButton>
+                            <p:commandButton value="Cancelar" oncomplete="PF('dlgModificar').hide()" />
+
+                        </h:form>
+
+                    </p:dialog>
+                </p:panel>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
